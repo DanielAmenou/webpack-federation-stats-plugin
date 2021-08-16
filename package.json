@@ -2,7 +2,7 @@
   "name": "webpack-federation-stats-plugin",
   "version": "1.0.0",
   "description": "export module federation stats",
-  "main": "index.js",
+  "main": "FederationStatsPlugin.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

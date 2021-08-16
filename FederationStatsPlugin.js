@@ -4,16 +4,17 @@ const EXTENSION_REGEX = /\.[^/.]+$/
 
 class FederationStatsPlugin {
   constructor(options = {fileName: "federation-stats.json"}) {
-    if (!options || !options.fileName) throw new Error("fileName option is required.")
     this._options = options
   }
 
   apply(compiler) {
-    const logger = compiler.getInfrastructureLogger(PLUGIN_NAME)
     const federationPlugin = compiler.options.plugins && compiler.options.plugins.find((plugin) => plugin.constructor.name === "ModuleFederationPlugin")
 
     if (!federationPlugin) throw new Error("No ModuleFederationPlugin found.")
 
+    const appName = federationPlugin._options.name
+
+    // get exposed modules from the ModuleFederationPlugin
     const exposedFiles = new Map(Object.entries(federationPlugin._options.exposes || {}).map(([k, v]) => (typeof v === "object" ? [v.import, k] : [v, k])))
 
     compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
@@ -24,7 +25,9 @@ class FederationStatsPlugin {
         },
         async () => {
           const stats = compilation.getStats().toJson({})
-          const modules = stats.modules.filter((module) => module.issuerName === "container entry" && exposedFiles.has(module.name.replace(EXTENSION_REGEX, "")))
+          // find mf modules
+          const mfModules = stats.modules.filter((module) => module.issuerName === "container entry" && exposedFiles.has(module.name.replace(EXTENSION_REGEX, "")))
+
           const chunksReducer = (chunksArr, current) => {
             current.siblings.forEach((s) => {
               const chunk = stats.chunks.find((c) => c.id === s)
@@ -33,17 +36,21 @@ class FederationStatsPlugin {
             current.files.forEach((f) => chunksArr.push(f))
             return chunksArr
           }
-          const chunks = modules.map((module) => {
+
+          const chunks = mfModules.map((module) => {
             const exposedAs = exposedFiles.get(module.name.replace(EXTENSION_REGEX, ""))
-            const chunks = module.chunks.map((chunkId) => stats.chunks.find((chunk) => chunk.id === chunkId)).reduce(chunksReducer, [])
+            const chunks = module.chunks
+              .map((chunkId) => stats.chunks.find((chunk) => chunk.id === chunkId))
+              .filter((chunk) => chunk.parents[0] === appName)
+              .reduce(chunksReducer, [])
             return {
               module: exposedAs,
               chunks: chunks,
-              id: module.id
+              id: module.id,
             }
           })
 
-          const exposes = chunks.reduce((p, c) => Object.assign(p, {[c.module.replace("./", "")]: c.chunks}), {})
+          const exposes = chunks.reduce((result, current) => Object.assign(result, {[current.module.replace("./", "")]: current.chunks}), {})
           const name = (federationPlugin._options.library && federationPlugin._options.library.name) || federationPlugin._options.name
 
           const statsResult = {
@@ -53,16 +60,16 @@ class FederationStatsPlugin {
 
           const fileName = this._options.fileName
           const statsBuffer = Buffer.from(JSON.stringify(statsResult), "utf-8")
-          const stats = {
+          const mfStats = {
             source: () => statsBuffer,
             size: () => statsBuffer.length,
           }
 
           const asset = compilation.getAsset(fileName)
           if (asset) {
-            compilation.updateAsset(fileName, stats)
+            compilation.updateAsset(fileName, mfStats)
           } else {
-            compilation.emitAsset(fileName, stats)
+            compilation.emitAsset(fileName, mfStats)
           }
         }
       )
