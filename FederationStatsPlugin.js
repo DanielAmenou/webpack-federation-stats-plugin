@@ -41,7 +41,7 @@ class FederationStatsPlugin {
             const exposedAs = exposedFiles.get(module.name.replace(EXTENSION_REGEX, ""))
             const chunks = module.chunks
               .map((chunkId) => stats.chunks.find((chunk) => chunk.id === chunkId))
-              .filter((chunk) => chunk.parents[0] === appName)
+              .filter((chunk) => chunk.runtime[0] === appName)
               .reduce(chunksReducer, [])
             return {
               module: exposedAs,
