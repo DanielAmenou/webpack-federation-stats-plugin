@@ -1,6 +1,6 @@
 {
   "name": "webpack-federation-stats-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "export module federation stats",
   "main": "FederationStatsPlugin.js",
   "scripts": {
@@ -11,7 +11,12 @@
     "type": "git",
     "url": "https://github.com/DanielAmenou/webpack-federation-stats-plugin.git"
   },
-  "keywords": ["webpack", "plugin", "module federation", "loadable-components"],
+  "keywords": [
+    "webpack",
+    "plugin",
+    "module federation",
+    "loadable-components"
+  ],
   "author": "Daniel Amenou <amenou.daniel@gmail.com>",
   "license": "MIT"
 }
