@@ -4,7 +4,11 @@
   "description": "export module federation stats",
   "main": "FederationStatsPlugin.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish:patch": "npm version patch -m \"patch version - %s\" && npm publish",
+    "publish:minor": "npm version minor -m \"minor version - %s\" && npm publish",
+    "publish:major": "npm version major -m \"major version - %s\" && npm publish",
+    "postpublish": "git push && git push --tags"
   },
   "homepage": "https://github.com/DanielAmenou/webpack-federation-stats-plugin#readme",
   "repository": {
