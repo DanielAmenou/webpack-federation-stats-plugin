@@ -1,6 +1,6 @@
 {
   "name": "webpack-federation-stats-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "export module federation stats",
   "main": "FederationStatsPlugin.js",
   "scripts": {
