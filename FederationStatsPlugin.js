@@ -3,8 +3,8 @@ const PLUGIN_NAME = "FederationStatsPlugin"
 const EXTENSION_REGEX = /\.[^/.]+$/
 
 class FederationStatsPlugin {
-  constructor(options = {fileName: "federation-stats.json"}) {
-    this._options = options
+  constructor(options = {}) {
+    this._options = {fileName: "federation-stats.json", ...options}
   }
 
   apply(compiler) {
@@ -56,6 +56,11 @@ class FederationStatsPlugin {
           const statsResult = {
             name,
             exposes,
+          }
+
+          const publicUrl = this._options.publicUrl
+          if (publicUrl) {
+            statsResult.publicUrl = publicUrl
           }
 
           const fileName = this._options.fileName
