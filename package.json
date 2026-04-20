@@ -4,7 +4,10 @@
   "description": "export module federation stats",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish:patch": "npm version patch -m \"patch version - %s\" && npm publish",
+    "publish:minor": "npm version minor -m \"minor version - %s\" && npm publish",
+    "publish:major": "npm version major -m \"major version - %s\" && npm publish",
+    "postpublish": "git push && git push --tags"
   },
   "funding": {
     "type": "github",
@@ -15,7 +18,11 @@
     "type": "git",
     "url": "https://github.com/DanielAmenou/webpack-federation-stats-plugin.git"
   },
-  "keywords": ["webpack", "plugin", "module federation"],
+  "keywords": [
+    "webpack",
+    "plugin",
+    "module federation"
+  ],
   "author": "Daniel Amenou <amenou.daniel@gmail.com>",
   "license": "MIT"
 }
