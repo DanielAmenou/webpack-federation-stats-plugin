@@ -38,3 +38,13 @@ module.exports = {
 }
 
 ```
+
+## Support
+
+If you find this project helpful, consider supporting the author:
+
+- [GitHub Sponsors](https://github.com/sponsors/DanielAmenou)
+
+## License
+
+MIT

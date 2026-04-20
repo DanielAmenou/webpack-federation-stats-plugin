@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/DanielAmenou"
+  },
   "homepage": "https://github.com/DanielAmenou/webpack-federation-stats-plugin#readme",
   "repository": {
     "type": "git",
